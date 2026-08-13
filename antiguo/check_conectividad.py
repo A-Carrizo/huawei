@@ -18,7 +18,7 @@ TIMEOUT = 3  # segundos
 
 # Ajustar al rango real que administrás, en formato CIDR.
 # Ejemplos: "100.90.44.0/24" (254 IPs), "100.90.44.0/28" (14 IPs)
-RANGO = "100.86.34.0/24"
+RANGO = "100.87.49.0/24"
 
 IP_LIST = [str(ip) for ip in ipaddress.ip_network(RANGO).hosts()]
 
