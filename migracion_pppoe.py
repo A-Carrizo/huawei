@@ -41,7 +41,7 @@ requests.packages.urllib3.disable_warnings()
 
 # ============================= CONFIGURACIÓN =================================
 
-RANGO = "100.90.66.0/24"          # <-- CIDR a escanear, ajustar según el lote
+RANGO = "100.90.108.0/24"          # <-- CIDR a escanear, ajustar según el lote
 PORT = 1771
 TIMEOUT_CONECTIVIDAD = 3          # segundos, para el escaneo de puerto
 MAX_WORKERS_CONECTIVIDAD = 20     # hilos para el escaneo de conectividad (paralelo, seguro)
