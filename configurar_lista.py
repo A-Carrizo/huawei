@@ -42,7 +42,7 @@ TR069_CONFIG = {
     "conuser": "admin",
     "conpasswd": "admin123",
     "inform": True,
-    "interval": "60",
+    "interval": "20",
 }
 
 DELAY_ENTRE_ROUTERS = 3  # segundos

@@ -41,7 +41,12 @@ requests.packages.urllib3.disable_warnings()
 
 # ============================= CONFIGURACIÓN =================================
 
-RANGO = "100.90.66.0/24"          # <-- CIDR a escanear, ajustar según el lote
+# Puede ser una sola cadena (un rango) o una lista con hasta 2 rangos CIDR.
+# Ejemplos:
+# RANGOS = "100.86.30.0/24"
+# RANGOS = ["100.86.30.0/24", "100.86.31.0/24"]
+RANGOS = ["100.90.77.0/24", "100.90.78.0/24"]
+
 PORT = 1771
 TIMEOUT_CONECTIVIDAD = 3          # segundos, para el escaneo de puerto
 MAX_WORKERS_CONECTIVIDAD = 20     # hilos para el escaneo de conectividad (paralelo, seguro)
@@ -54,8 +59,8 @@ ADMIN_PASSWORD = "N&0telec0m"
 DOMINIO_ESPERADO = "@wsneo.com.py"
 
 DATOS_CSV = "DATOS.csv"           # planilla de contratos (tag, pppoe, onu_modelo, ativo_acs, status_contrato)
-OUTPUT_XLSX = "No_conecta_Migracion.xlsx"
-HOJA = "Juan"
+OUTPUT_XLSX = "Cambio_dominio.xlsx"
+HOJA = "Eliseo"
 
 # ==============================================================================
 
@@ -146,9 +151,21 @@ def login(session: requests.Session, base_url: str):
 # --------------------------------------------------------------------------
 
 
-def escanear_conectividad(rango: str) -> list[str]:
-    """Paso 1: qué IPs del rango responden en el puerto de gestión."""
-    ip_list = [str(ip) for ip in ipaddress.ip_network(rango).hosts()]
+def escanear_conectividad(rangos) -> list[str]:
+    """Paso 1: qué IPs de uno o dos rangos responden en el puerto de gestión."""
+    # Acepta una cadena (un rango) o una lista de hasta 2 rangos.
+    if isinstance(rangos, str):
+        rangos_list = [rangos]
+    else:
+        rangos_list = list(rangos)
+
+    if len(rangos_list) > 2:
+        raise ValueError("Solo se permiten hasta 2 rangos en RANGOS.")
+
+    ip_list = []
+    for r in rangos_list:
+        ip_list.extend([str(ip) for ip in ipaddress.ip_network(r).hosts()])
+
     print(f"[1/3] Verificando conectividad al puerto {PORT} en {len(ip_list)} IP(s)...")
 
     def check_port(ip: str):
@@ -288,7 +305,7 @@ def escribir_excel(filas: list[dict], path: str):
 
 
 def main():
-    ips_online = escanear_conectividad(RANGO)
+    ips_online = escanear_conectividad(RANGOS)
     if not ips_online:
         print("No hay IPs online, no hay nada para procesar.")
         return
